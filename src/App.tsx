@@ -7,7 +7,7 @@ const App = () => {
   return (
     <div>
       <ReCAPTCHA
-        sitekey='6LfWaC0mAAAAABLa4zE4WU8APrLQLgOOevQA1qLn'
+        sitekey='6LdLrDAmAAAAAOYtjQs6lTLMpCx9Kb1aYPmHdeOo'
       />
     </div>
   );
