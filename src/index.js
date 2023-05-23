@@ -1,10 +1,15 @@
 // packages
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
+import path, { dirname } from 'path';
 import dotenv from 'dotenv';
 import axios from 'axios';
+import { fileURLToPath } from 'url';
 
+
+// Get the current file's directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // configs
 dotenv.config();
