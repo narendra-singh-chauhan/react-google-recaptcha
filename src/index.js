@@ -1,5 +1,5 @@
 // packages
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -9,36 +9,36 @@ import axios from 'axios';
 // configs
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json());
 
 // production
 if (process.env.NODE_ENV === 'production') {
     // Serve the static files from the frontend build directory
-    app.use(express.static(path.join(__dirname, 'dist')));
-    
+    app.use(express.static(path.join(__dirname, '../client/dist')));
+
     // For all other routes, serve the frontend index.html
-    app.get('/', (req: Request, res: Response) => {
-        res.sendFile(path.join(__dirname, '../../dist', 'index.html'), (error) => {
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(__dirname, '../client/dist', 'index.html'), function (error) {
             if (error) {
-                res.status(400).json({ message: 'Error while serving frontend from node js.', error });
-          }
-      });
+                res.status(400).json({ err: error });
+            }
+        });
     });
 }
 
-app.post('/test-recaptcha', async (req: Request, res: Response) => {
+app.post('/test-recaptcha', async (req, res) => {
     try {
         const { email, password, token } = req.body;
         // Make a request to the reCAPTCHA API to verify the token
         const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
             params: {
-            secret: '6LdLrDAmAAAAAEsVa20Ts_7WG1FLvHAaAw5UZDzJ',
-            response: token
+                secret: '6LdLrDAmAAAAAEsVa20Ts_7WG1FLvHAaAw5UZDzJ',
+                response: token
             }
         });
-        
+
         const { success } = response.data;
 
         if (success) {
@@ -47,17 +47,16 @@ app.post('/test-recaptcha', async (req: Request, res: Response) => {
             res.status(400).json({ success: false, message: 'Invalid captcha' });
         }
     } catch (error) {
-        res.status(400).json({message: 'Something wrong with the backend.'});
+        res.status(400).json({ message: 'Something wrong with the backend.' });
     }
 });
 
 // development
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req, res) => {
     res.send('Hello from the backend');
 });
 
 // listen
 app.listen(PORT, () => {
-    console.log('server mode: ', __dirname);
     console.log(`Server is running at http://localhost:${PORT}`);
 });
