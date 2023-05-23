@@ -19,10 +19,10 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'dist')));
     
     // For all other routes, serve the frontend index.html
-    app.get('*', (req: Request, res: Response) => {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'), (error) => {
+    app.get('/', (req: Request, res: Response) => {
+        res.sendFile(path.join(__dirname, '../../dist', 'index.html'), (error) => {
             if (error) {
-                res.status(400).json({ error });
+                res.status(400).json({ message: 'Error while serving frontend from node js.', error });
           }
       });
     });
@@ -40,7 +40,7 @@ app.post('/test-recaptcha', async (req: Request, res: Response) => {
         });
         
         const { success } = response.data;
-        
+
         if (success) {
             res.status(200).json({ success: true, email, password, token });
         } else {
@@ -58,5 +58,6 @@ app.get('/', (req: Request, res: Response) => {
 
 // listen
 app.listen(PORT, () => {
+    console.log('server mode: ', __dirname);
     console.log(`Server is running at http://localhost:${PORT}`);
 });
